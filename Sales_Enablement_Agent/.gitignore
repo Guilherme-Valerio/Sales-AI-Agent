@@ -1,0 +1,27 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments (Local environments should never be committed)
+.venv/
+venv/
+ENV/
+
+# Tool-specific artifacts (ADK and local caches)
+.adk/
+.adk/*
+.pytest_cache/
+
+# Environment variables and secrets (CRITICAL for security)
+.env
+.env.local
+.env.*
+.flaskenv
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Misc
+2.25.0
