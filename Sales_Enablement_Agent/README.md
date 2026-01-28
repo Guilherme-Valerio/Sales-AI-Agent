@@ -1,110 +1,64 @@
-# 🚀 Sales Enablement & Outreach Agent
+# 📦 Package: Sales Enablement Agent Internals
 
-An intelligent AI Agent designed to eliminate the "grunt work" of sales research. By automating the discovery and copywriting phase, this agent allows Sales Development Representatives (SDRs) and Account Executives (AEs) to focus on **building relationships and closing deals.**
-
----
-
-## 🕵️ The Problem: The "Research Trap"
-
-Sales professionals spend **20-30% of their day** manually researching leads. This involves opening multiple tabs to find company data, news for a "hook," and business pain points. This manual work is slow, inconsistent, and prevents scaling.
-
-## 🛠️ The Solution: Automated Sales Intelligence
-
-This agent performs the full SDR lifecycle in seconds using **Vertex AI Reasoning Engine**:
-
-1. **Discovery (The Detective):** Uses **Google Search** to find real-time company data and "trigger events" (news, press releases).
-2. **Strategy:** Analyzes the lead's role and company context to predict likely business pain points.
-3. **Outreach (The Copywriter):** Generates high-conversion, professional cold emails or LinkedIn messages.
+This directory contains the core logic, tool definitions, and deployment configurations for the Sales Enablement AI Agent. It is designed to be orchestrated by the **Vertex AI Reasoning Engine**.
 
 ---
 
-## 🌐 Live Demo
+## 📂 Directory Structure
 
-The agent is currently deployed and available here:
-👉 **[Sales Intelligence Agent Hub](https://sales-agent-app-243890394709.us-central1.run.app/)**
-
-> [!NOTE]
-> Access to the backend is restricted. To test with your own leads, please email **guilherme.svalerio@hotmail.com** for access.
-
----
-
-## 🧪 Local Execution Examples
-
-### 1. Terminal CLI (Direct Agent Interaction)
-
-You can interact with the agent logic directly through the terminal to verify the search tools and reasoning flow.
-
-```bash
-# Creating and Activating environment and running the agent
-python -m venv venv
-
-venv\Scripts\activate
-
-python agent.py      
-
---- Connecting to Sales Enablement Agent ---
-```
-
-### 2. ADK Web Server (Developer Interface)
-
-The ADK Web Server provides a local GUI and detailed debug traces for tool execution.
-
-```bash
-adk web      
-# INFO: Started server process
-# INFO: Uvicorn running on http://127.0.0.1:8000
-
-```
-
-*This interface allows for real-time monitoring of function calls and candidate responses during development.*
+* `agent.py`: The core script defining the `Agent` object, system instructions, and tool definitions.
+* `app.py`: The Streamlit frontend interface for user interaction.
+* `requirements.txt`: Package-specific dependencies.
+* `.env`: Local environment configuration (Project ID, Location).
+* `Dockerfile`: Containerization instructions for Cloud Run deployment.
 
 ---
 
-## ⚙️ Setup & Configuration
+## 🛠️ Core Tool Logic
 
-### 1. Prerequisites
+The agent is built on three primary Python functions that the LLM (Gemini 2 Pro) can trigger autonomously:
 
-* **Python 3.11+**
-* **Google Cloud SDK (gcloud CLI)** installed and authenticated.
-* Vertex AI Project with **Reasoning Engine** enabled.
+### 1. `analyze_lead`
 
-### 2. Installation
+* **Purpose:** Live research using Google Search.
+* **Input:** Lead name, Company, Email, Role.
+* **Mechanism:** Triggers a search for recent financial news, press releases, and company size. It specifically looks for "hooks" (trigger events) within the last 6 months.
 
-```bash
-git clone <your-repo-link>
-pip install -r requirements.txt
-gcloud auth application-default login
+### 2. `generate_outreach_content`
 
-```
+* **Purpose:** Creative copywriting.
+* **Input:** Sales Brief (from `analyze_lead`), Content Type (Email/LinkedIn).
+* **Mechanism:** Implements a "no-fluff" sales methodology. It bridges the gap between a discovered business pain point and a recommended sales angle.
 
-### 3. Environment Variables
+### 3. `refine_lead_summary`
 
-Create a `.env` file:
-
-```env
-GOOGLE_CLOUD_PROJECT=your-project-id
-GOOGLE_CLOUD_LOCATION=us-central1
-
-```
+* **Purpose:** Iterative research.
+* **Input:** Existing brief and a "Focus Area."
+* **Mechanism:** Allows the user to pivot the research (e.g., "Focus more on their AI server backlog").
 
 ---
 
-## 🏗️ Technical Architecture
+## 🏗️ Reasoning Engine Integration
 
-* **Frontend:** [Streamlit](https://streamlit.io/) for the user-facing chat interface.
-* **Agent Engine:** [Vertex AI Reasoning Engine](https://www.google.com/search?q=https://cloud.google.com/vertex-ai/docs/reasoning-engine/overview) for orchestration.
-* **LLM:** Gemini 2.5 Pro.
-* **Tools:** Custom Python functions with **Google Search** integration.
-* **Deployment:** [Google Cloud Run](https://cloud.google.com/run) (Containerized via Docker).
+This package is designed to be deployed as a **Reasoning Engine** (formerly known as Vertex AI Extensions).
+
+**Key Integration Details:**
+
+* **Base Class:** `google.adk.Agent`
+* **Orchestration:** The agent manages state and tool-calling loops automatically via the `agent_engines` SDK.
+* **Authentication:** Uses Service Account credentials (via ADC) to access Vertex AI and Google Search APIs.
 
 ---
 
-## 🔮 Roadmap
+## ⚠️ Security & Standards
 
-* **CRM Integration:** Push generated briefs directly to **Salesforce/HubSpot**.
-* **Batch Processing:** Upload a CSV of 100+ leads for automated bulk enrichment.
+* **Data Privacy:** This agent only accesses **publicly available** information via Google Search. It does not access private LinkedIn profiles or internal company databases.
+* **Hallucination Control:** The `analyze_lead` tool is strictly instructed to provide **Sources (URLs)** for every financial claim made.
 
-**Developed by Guilherme Valerio**
-*Specializing in Sales Automation & Generative AI.*
+---
+
+**Maintainer:** Guilherme Valerio
+
+**Version:** 1.1.0
 
 ---
