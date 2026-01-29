@@ -49,7 +49,6 @@ if prompt := st.chat_input("How can I help with your leads today?"):
 
     with st.chat_message("assistant"):
         response_placeholder = st.empty()
-        # Adding a status indicator to see Tool Calls
         status_placeholder = st.status("Agent is thinking...", expanded=False)
         full_response = ""
         
@@ -61,12 +60,10 @@ if prompt := st.chat_input("How can I help with your leads today?"):
             )
             
             for event in responses:
-                # Handle Tool Calls (The 'Behind the scenes' work)
                 if "content" in event:
                     parts = event["content"].get("parts", [])
                     for part in parts:
                         if "text" in part:
-                            # Update the actual chat text
                             full_response += part["text"]
                             response_placeholder.markdown(full_response + "▌")
                         
@@ -77,8 +74,6 @@ if prompt := st.chat_input("How can I help with your leads today?"):
                         elif "function_response" in part:
                             status_placeholder.write("✅ Tool execution complete.")
 
-            # If the agent is too brief, we can prompt it in the next turn 
-            # or ensure the placeholder displays the final text
             response_placeholder.markdown(full_response)
             status_placeholder.update(label="Response complete!", state="complete", expanded=False)
             
