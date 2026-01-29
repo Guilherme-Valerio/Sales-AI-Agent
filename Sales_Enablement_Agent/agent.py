@@ -44,8 +44,6 @@ def analyze_lead(
     and generates a Sales Brief with 5 key points.
     """
     client = get_genai_client()
-
-    # PROMPT UPDATE: Added request for "Recent News" and "Sources"
     prompt = f"""
 You are a Sales Intelligence Agent.
 
@@ -90,7 +88,7 @@ Rules:
 
 
 # -------------------------------------------------
-# TOOL 2 — REFINEMENT (OPTIONAL)
+# TOOL 2 — REFINEMENT
 # -------------------------------------------------
 
 def refine_lead_summary(
@@ -115,7 +113,7 @@ Rules:
 Sales Brief:
 {current_summary}
 """
-
+    
     response = client.models.generate_content(
         model=MODEL_NAME,
         contents=prompt
@@ -169,7 +167,7 @@ If LinkedIn: Body only
 
 
 # -------------------------------------------------
-# ROOT AGENT INSTRUCTION (TRANSLATED)
+# ROOT AGENT INSTRUCTION
 # -------------------------------------------------
 
 ROOT_AGENT_INSTRUCTION = """
