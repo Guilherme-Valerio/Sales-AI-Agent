@@ -218,7 +218,7 @@ vertexai.init(
 )
 
 root_agent = Agent(
-    model="gemini-2.5-pro",
+    model="gemini-2.5-flash",
     name="sales_enablement_agent",
     description="B2B Sales Research and Drafting Agent",
     instruction=ROOT_AGENT_INSTRUCTION,
@@ -226,7 +226,7 @@ root_agent = Agent(
 )
 
 AGENT_RESOURCE_NAME = (
-    f"projects/243890394709/locations/us-central1/reasoningEngines/2448160495778136064"
+    f"projects/243890394709/locations/us-central1/reasoningEngines/5895314166809362432"
 )
 
 USER_ID = "user"

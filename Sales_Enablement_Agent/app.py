@@ -6,7 +6,7 @@ import os
 # Configuration
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1")
-AGENT_RESOURCE_NAME = "projects/243890394709/locations/us-central1/reasoningEngines/2448160495778136064"
+AGENT_RESOURCE_NAME = "projects/243890394709/locations/us-central1/reasoningEngines/5895314166809362432"
 
 st.set_page_config(page_title="Sales Intelligence Agent", page_icon="💼")
 
@@ -78,8 +78,25 @@ if prompt := st.chat_input("How can I help with your leads today?"):
             status_placeholder.update(label="Response complete!", state="complete", expanded=False)
             
         except Exception as e:
-            st.error(f"Error calling the agent: {e}")
-            full_response = "I encountered an issue. Try clicking 'Reset Conversation' in the sidebar."
-            st.markdown(full_response)
+            error_msg = str(e)
+            
+            # Check for Quota/Rate Limit issues
+            if "429" in error_msg or "Resource has been exhausted" in error_msg:
+                st.warning("⚠️ **API Quota Exceeded (Error 429)**")
+                full_response = (
+                    "The system is currently handling too many requests. "
+                    "Please wait about 10-20 seconds before trying again. "
+                    "If this persists, we may need to increase the project's Vertex AI quotas."
+                )
+            else:
+                # General error handling
+                st.error(f"❌ **Agent Error:** {error_msg}")
+                full_response = (
+                    "I encountered an unexpected issue. You can try clicking "
+                    "'Reset Conversation' in the sidebar to start a clean session."
+                )
+            
+            # Ensure the placeholder shows the final status message
+            response_placeholder.markdown(full_response)
 
     st.session_state.messages.append({"role": "assistant", "content": full_response})
